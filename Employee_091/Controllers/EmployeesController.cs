@@ -43,9 +43,9 @@ namespace Employee_091.Controllers
         }
 
         // GET: Employees/Create
-        public IActionResult Create()
+        public IActionResult Create(int id=0)
         {
-            return View();
+            return View(new Employees());
         }
 
         // POST: Employees/Create
@@ -118,19 +118,10 @@ namespace Employee_091.Controllers
         // GET: Employees/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var employees = await _context.Employees
-                .FirstOrDefaultAsync(m => m.EmployeeId == id);
-            if (employees == null)
-            {
-                return NotFound();
-            }
-
-            return View(employees);
+            var employees = await _context.Employees.FindAsync(id);
+            _context.Employees.Remove(employees);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Employees/Delete/5
